@@ -15,7 +15,7 @@ Use this command to start the container. Unbound will listen on port 53/udp.
 (optional)
 If you want to override the nameserver in the unbound container, you can use:
 
-```docker run --name unbound -d -p 53:53/udp -p 53:53 --dns="127.0.0.1" secns/unbound:1.6.6```
+```docker run --name unbound -d -p 53:53/udp -p 53:53 --dns="127.0.0.1" folhabranca/unbound:latest```
 
 # Configuration
 These options can be set via the environment variable -e flag:
@@ -38,8 +38,8 @@ These options can be set via the environment variable -e flag:
 
 # More config control
 
-If you need to use other control commands, just mount a bind dir to `/opt/unbound/etc/unbound/unbound.conf.d` and 
-put a <.conf> file in there with your configuration.
+If you need to use other control commands, just mount a bind dir to
+`/opt/unbound/etc/unbound/unbound.conf.d` and put a <.conf> file in there with your configuration.
 
 Note: The default access configuration is in this directory. If you are mounting this directory, you need at
 least to include access configuration, otherwise you will get REFUSED reply.
@@ -82,6 +82,17 @@ services:
 ```
 
 Note: `net_admin` capability must be added to the container if you want to change the so-rcvbuf or so-sndbuf.
+
+# Unbound-control
+
+`unbound-control` is available if **ENABLE_REMOTE_CONTROL** is set to **yes**. To access it 
+just create a script like this:
+
+```
+#!/bin/sh
+
+docker exec unbound_unbound_1  /opt/unbound/sbin/unbound-control $@
+```
 
 # Known to work
 
