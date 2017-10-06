@@ -1,0 +1,3 @@
+#!/bin/sh
+
+docker exec unbound_unbound_1  /opt/unbound/sbin/unbound-control $@

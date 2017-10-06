@@ -1,0 +1,31 @@
+version: '3'
+services:
+  unbound:
+    image: folhabranca/unbound:1.6.6
+    network_mode: bridge
+    ports:
+      - "53:53/udp"
+      - "53:53"
+    volumes:
+      - ./unbound.conf.d:/opt/unbound/etc/unbound/unbound.conf.d
+      - ./log:/opt/unbound/etc/unbound/log
+    environment:
+      - PORT=53
+      - DO_IPV6=no
+      - DO_IPV4=yes
+      - DO_UDP=yes
+      - DO_TCP=yes
+      - VERBOSITY=1
+      - NUM_THREADS=1
+      - SO_REUSEPORT=yes
+      - HIDE_IDENTITY=yes
+      - HIDE_VERSION=yes
+      - QNAME_MINIMISATION=yes
+      - RRSET_ROUNDROBIN=yes
+      - USE_CAPS_FOR_ID=yes
+      - ENABLE_REMOTE_CONTROL=yes
+      - USE_LOGFILE=no
+      - USE_CHROOT=yes
+    cap_add:
+      - net_admin
+    restart: always
