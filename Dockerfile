@@ -80,6 +80,6 @@ RUN set -x && \
 COPY resources/unbound.sh /
 RUN chmod +x /unbound.sh
 COPY resources/unbound.conf /opt/unbound/etc/unbound/
-# COPY resources/allow.conf /opt/unbound/etc/unbound/conf.d/
+COPY resources/allow.conf /opt/unbound/etc/unbound/conf.d/
 EXPOSE 53/udp
 CMD ["/unbound.sh"]
