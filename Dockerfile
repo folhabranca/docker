@@ -56,7 +56,6 @@ RUN set -x && \
     find /opt/libressl/bin -type f | xargs strip --strip-all && \
     find /opt/libressl/lib/lib* -type f | xargs strip --strip-all && \
     find /opt/unbound/lib/lib* -type f | xargs strip --strip-all && \
-    find /opt/unbound/lib/lib* -type f | xargs strip --strip-all && \
     strip --strip-all /opt/unbound/sbin/unbound && \
     strip --strip-all /opt/unbound/sbin/unbound-anchor && \
     strip --strip-all /opt/unbound/sbin/unbound-checkconf && \
