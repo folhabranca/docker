@@ -1,10 +1,21 @@
 Unbound (with DNSSEC validation)
 ===========
 
+# Main Purpose
+
+- Be slim.
+- Use the latest unbound and libressl versions available.
+- Intended to be the latest level image (no import from this image)
+
+so, this means:
+
+- No python module (be slim ;)).
+- No static library from libunbound or libressl (latest level image and be slim).
+
 # Current versions
 
-- **unbound**: 1.6.6 (compiled, not package)
-- **libressl**: 2.6.2 (compiled, not package)
+- unbound: **1.6.6** (compiled, not package)
+- libressl: **2.6.2** (compiled, not package)
 - Debian Strech slime image based
 
 # Running
@@ -86,8 +97,10 @@ services:
 
 
 Notes:
- - 
- - `net_admin` capability must be added to the container if you want to change the so-rcvbuf or so-sndbuf.
+ - If USE_LOGFILE is set to yes, the log file will be `/opt/unbound/etc/unbound/log/unbound.log`.
+ - `net_admin` capability must be added to the container if you want to change the 
+   so-rcvbuf or so-sndbuf config. Currently those can only be changed by mount a volume of `unbound.conf.d`
+   and adding a config file there.
 
 # Unbound-control
 
