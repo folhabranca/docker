@@ -3,8 +3,9 @@ Unbound (with DNSSEC validation)
 
 # Current versions
 
-- **unbound**: 1.6.6
-- **libressl**: 2.6.2
+- **unbound**: 1.6.6 (compiled, not package)
+- **libressl**: 2.6.2 (compiled, not package)
+- Debian Strech slime image based
 
 # Running
 
@@ -20,6 +21,7 @@ If you want to override the nameserver in the unbound container, you can use:
 # Configuration
 These options can be set via the environment variable -e flag:
 
+- **INTERFACE**: Sets the interface to listen to. (Default: 0.0.0.0, Values: <IP addr>)
 - **PORT**: Port number that unbound will listen. This has to be the same of the docker run. (Default: 53, Values: <1-65535>)
 - **DO_IPV6**: Enable or disable ipv6. (Default: "yes", Values: "yes, no")
 - **DO_IPV4**: Enable or disable ipv4. (Default: "yes", Values: "yes, no")
@@ -49,39 +51,43 @@ least to include access configuration, otherwise you will get REFUSED reply.
 If using docker-compose, use like this:
 
 ```
-services:                                 
-  unbound:                                                                                                    
-    image: folhabranca/unbound:latest                                                                        
-    network_mode: bridge                                                                                      
-    ports:                                                                                                    
-      - "53:53/udp"                                                                                           
-      - "53:53"                                                                                               
-    volumes:                                                                                                  
-      - ./unbound.conf.d:/opt/unbound/etc/unbound/unbound.conf.d                                              
-      - ./log:/opt/unbound/etc/unbound/log                                                                    
-    environment:                                                                                              
-      - PORT=53                                                                                               
-      - DO_IPV6=no                                                                                            
-      - DO_IPV4=yes                                                                                           
-      - DO_UDP=yes                                                                                            
-      - DO_TCP=yes                                                                                            
-      - VERBOSITY=1                                                                                           
-      - NUM_THREADS=1                                                                                         
-      - SO_REUSEPORT=yes                                                                                      
-      - HIDE_IDENTITY=yes                                                                                     
-      - HIDE_VERSION=yes                                                                                      
-      - QNAME_MINIMISATION=yes                                                                                
-      - RRSET_ROUNDROBIN=yes                                                                                  
-      - USE_CAPS_FOR_ID=yes                                                                                   
-      - ENABLE_REMOTE_CONTROL=yes                                                                             
-      - USE_LOGFILE=no                                                                                        
-      - USE_CHROOT=yes                                                                                        
-    cap_add:                                                                                                  
-      - net_admin                                                                                             
+services:
+  unbound:
+    image: folhabranca/unbound:latest
+    network_mode: bridge
+    ports:
+      - "53:53/udp"
+      - "53:53"
+    volumes:
+      - ./unbound.conf.d:/opt/unbound/etc/unbound/unbound.conf.d
+      - ./log:/opt/unbound/etc/unbound/log
+    environment:
+      - INTERFACE=0.0.0.0
+      - PORT=53
+      - DO_IPV6=no
+      - DO_IPV4=yes
+      - DO_UDP=yes
+      - DO_TCP=yes
+      - VERBOSITY=1
+      - NUM_THREADS=1
+      - SO_REUSEPORT=yes
+      - HIDE_IDENTITY=yes
+      - HIDE_VERSION=yes
+      - QNAME_MINIMISATION=yes
+      - RRSET_ROUNDROBIN=yes
+      - USE_CAPS_FOR_ID=yes
+      - ENABLE_REMOTE_CONTROL=yes
+      - USE_LOGFILE=no
+      - USE_CHROOT=yes
+    cap_add:
+      - net_admin
     restart: always
 ```
 
-Note: `net_admin` capability must be added to the container if you want to change the so-rcvbuf or so-sndbuf.
+
+Notes:
+ - 
+ - `net_admin` capability must be added to the container if you want to change the so-rcvbuf or so-sndbuf.
 
 # Unbound-control
 
