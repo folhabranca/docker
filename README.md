@@ -3,24 +3,24 @@ Unbound (with DNSSEC validation)
 
 # Main Purpose
 
-- Be slim.
+- Be slim as possible.
 - Use the latest unbound and libressl versions available.
 - Intended to be the latest level image (no import from this image)
 
 so, this means:
 
-- No python module (be slim ;)).
-- No static library from libunbound or libressl (latest level image and be slim).
+- No python module.
+- No static library from libunbound or libressl.
 
 # Current versions
 
 - unbound: **1.6.6** (compiled, not package)
 - libressl: **2.6.2** (compiled, not package)
-- Debian Strech slime image based
+- Debian Strech slim image based
 
 # Running
 
-Use this command to start the container. Unbound will listen on port 53/udp.
+Use this command to start the container. Unbound will listen on port 53 udp and tcp.
 
 ```docker run --name unbound -d -p 53:53/udp -p 53:53 folhabranca/unbound:latest```
 
@@ -71,7 +71,7 @@ services:
       - "53:53"
     volumes:
       - ./unbound.conf.d:/opt/unbound/etc/unbound/unbound.conf.d
-      - ./log:/opt/unbound/etc/unbound/log
+      - ./unbound.log:/opt/unbound/etc/unbound/log/unbound.log
     environment:
       - INTERFACE=0.0.0.0
       - PORT=53
@@ -95,12 +95,10 @@ services:
     restart: always
 ```
 
-
 Notes:
  - If USE_LOGFILE is set to yes, the log file will be `/opt/unbound/etc/unbound/log/unbound.log`.
- - `net_admin` capability must be added to the container if you want to change the 
-   so-rcvbuf or so-sndbuf config. Currently those can only be changed by mount a volume of `unbound.conf.d`
-   and adding a config file there.
+ - `net_admin` capability must be added to the container if you want to change the `so-rcvbuf` or `so-sndbuf` config.
+   Currently those can only be changed by mount a volume of `unbound.conf.d` and adding a config file there.
 
 # Unbound-control
 
@@ -112,6 +110,10 @@ just create a script like this:
 
 docker exec unbound_unbound_1  /opt/unbound/sbin/unbound-control $@
 ```
+
+Notes:
+- Using the docker composer makes it easier to get the container name to use in the script.
+- **Be sure** to only give **exec** permission the users or group allowed to run the `unbound-control` command, otherwise every one in the host machine can play with your DNS server.
 
 # Known to work
 
