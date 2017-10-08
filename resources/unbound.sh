@@ -51,7 +51,9 @@ else
 fi
 
 if [ "x${USE_CHROOT}" = "xno" ]; then
-  echo "    chroot: \"\"" >> /opt/unbound/etc/unbound/unbound.conf
+  if ! grep -q "chroot:" /opt/unbound/etc/unbound/unbound.conf; then
+    echo "    chroot: \"\"" >> /opt/unbound/etc/unbound/unbound.conf
+  fi
 else
   mkdir -p /opt/unbound/etc/unbound/dev
   cp -a /dev/random /dev/urandom /opt/unbound/etc/unbound/dev/
