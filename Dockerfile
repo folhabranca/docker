@@ -22,9 +22,9 @@ RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     AR='gcc-ar' RABLIB='gcc-ranlib' ./configure --disable-dependency-tracking --prefix=/opt/libressl && \
     AR='gcc-ar' RABLIB='gcc-ranlib' make check && make install && \
     echo /opt/libressl/lib > /etc/ld.so.conf.d/libressl.conf && ldconfig
-ENV UNBOUND_VERSION="1.6.6" \
-    UNBOUND_SHA256="972b14dc33093e672652a7b2b5f159bab2198b0fe9c9e1c5707e1895d4d4b390" \
-    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.6.6.tar.gz"
+ENV UNBOUND_VERSION="1.6.7" \
+    UNBOUND_SHA256="4e7bd43d827004c6d51bef73adf941798e4588bdb40de5e79d89034d69751c9f" \
+    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.6.7.tar.gz"
 RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     set -x && \
     DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
@@ -39,7 +39,7 @@ RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     echo "${UNBOUND_SHA256} *unbound.tar.gz" | sha256sum -c - && \
     tar xzf unbound.tar.gz && \
     rm -f unbound.tar.gz && \
-    cd unbound-1.6.6 && \
+    cd unbound-1.6.7 && \
     groupadd unbound && \
     useradd -g unbound -s /etc -d /dev/null _unbound && \
     ./configure AR='gcc-ar' RANLIB='gcc-ranlib' --prefix=/opt/unbound --with-pthreads \
