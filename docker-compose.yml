@@ -1,15 +1,16 @@
 version: '3'
 services:
   unbound:
-    image: folhabranca/unbound:1.6.6
+    image: folhabranca/unbound:latest
     network_mode: bridge
     ports:
       - "53:53/udp"
       - "53:53"
     volumes:
       - ./unbound.conf.d:/opt/unbound/etc/unbound/unbound.conf.d
-      - ./log:/opt/unbound/etc/unbound/log
+      - ./log/unbound.log:/opt/unbound/etc/unbound/log/unbound.log
     environment:
+      - INTERFACE=0.0.0.0
       - PORT=53
       - DO_IPV6=no
       - DO_IPV4=yes
