@@ -15,7 +15,7 @@ so, this means:
 # Current versions
 
 - unbound: **1.6.7** (compiled, not package)
-- libressl: **2.6.2** (compiled, not package)
+- libressl: **2.6.3** (compiled, not package)
 - Debian Strech slim image based
 
 # Running
