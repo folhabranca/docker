@@ -4,9 +4,9 @@ RUN set -x && \
       bsdmainutils \
       ldnsutils && \
       rm -rf /var/lib/apt/lists/*
-ENV LIBRESSL_VERSION="2.6.3" \
-    LIBRESSL_SHA256="aead6598263171b96970da0d881e616d0813b69b35ebdc5991f87ff2ea7f5c98" \
-    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.6.3.tar.gz"
+ENV LIBRESSL_VERSION="2.6.4" \
+    LIBRESSL_SHA256="638a20c2f9e99ee283a841cd787ab4d846d1880e180c4e96904fc327d419d11f" \
+    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.6.4.tar.gz"
 RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     set -x && \
     DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
@@ -18,7 +18,7 @@ RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     echo "${LIBRESSL_SHA256} *libressl.tar.gz" | sha256sum -c - && \
     tar xzf libressl.tar.gz && \
     rm -f libressl.tar.gz && \
-    cd libressl-2.6.3 && \
+    cd libressl-2.6.4 && \
     AR='gcc-ar' RABLIB='gcc-ranlib' ./configure --disable-dependency-tracking --prefix=/opt/libressl && \
     AR='gcc-ar' RABLIB='gcc-ranlib' make check && make install && \
     echo /opt/libressl/lib > /etc/ld.so.conf.d/libressl.conf && ldconfig
