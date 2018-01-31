@@ -1,4 +1,4 @@
-FROM debian:stretch-slim AS build-env
+FROM debian:9-slim AS build-env
 RUN set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
       bsdmainutils \
