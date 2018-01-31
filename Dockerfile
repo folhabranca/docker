@@ -62,7 +62,7 @@ RUN set -x && \
     strip --strip-all /opt/unbound/sbin/unbound-control && \
     strip --strip-all /opt/unbound/sbin/unbound-host
 # ----------------------------------------------------------------------------
-FROM debian:stretch-slim
+FROM debian:9-slim
 COPY --from=build-env /opt/ /opt/
 RUN set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
