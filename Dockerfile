@@ -1,4 +1,4 @@
-FROM debian:9-slim AS build-env
+FROM debian:buster-slim AS build-env
 RUN set -x && \
     apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
       bsdmainutils \
@@ -62,7 +62,7 @@ RUN set -x && \
     strip --strip-all /opt/unbound/sbin/unbound-control && \
     strip --strip-all /opt/unbound/sbin/unbound-host
 # ----------------------------------------------------------------------------
-FROM debian:9-slim
+FROM debian:buster-slim
 COPY --from=build-env /opt/ /opt/
 RUN set -x && \
     apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
