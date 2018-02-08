@@ -29,7 +29,7 @@ RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     set -x && \
     DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
       $BUILD_DEPS  \
-      libevent-2.0  \
+      libevent-2.1  \
       libevent-dev  \
       libexpat1   \
       libexpat1-dev && \
@@ -68,7 +68,7 @@ RUN set -x && \
     apt-get update && apt-get install -y --no-install-recommends \
       bsdmainutils \
       ldnsutils \
-      libevent-2.0 \
+      libevent-2.1 \
       libexpat1 && \
     adduser --disabled-login --disabled-password --shell /bin/false \ 
           -uid 63423 --system --group --home /var/lib/unbound unbound && \
