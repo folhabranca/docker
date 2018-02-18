@@ -36,7 +36,7 @@ RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     curl -sSL $UNBOUND_DOWNLOAD_URL -o unbound.tar.gz && \
     echo "${UNBOUND_SHA256} *unbound.tar.gz" | sha256sum -c - && \
     cd unbound && \
-    tar xzf unbound.tar.gz --strip-components=1 && \
+    tar xzf ../unbound.tar.gz --strip-components=1 && \
     rm -f ../unbound.tar.gz && \
     groupadd unbound && \
     useradd -g unbound -s /etc -d /dev/null _unbound && \
