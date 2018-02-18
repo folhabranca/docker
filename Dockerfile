@@ -4,26 +4,24 @@ RUN set -x && \
       bsdmainutils \
       ldnsutils && \
       rm -rf /var/lib/apt/lists/*
-ENV LIBRESSL_VERSION="2.6.4" \
-    LIBRESSL_SHA256="638a20c2f9e99ee283a841cd787ab4d846d1880e180c4e96904fc327d419d11f" \
+ENV LIBRESSL_SHA256="638a20c2f9e99ee283a841cd787ab4d846d1880e180c4e96904fc327d419d11f" \
     LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.6.4.tar.gz"
 RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     set -x && \
     DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
       $BUILD_DEPS && \
-    rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /tmp/src && \
+    mkdir -p /tmp/src/libressl && \
     cd /tmp/src && \
     curl -sSL $LIBRESSL_DOWNLOAD_URL -o libressl.tar.gz && \
     echo "${LIBRESSL_SHA256} *libressl.tar.gz" | sha256sum -c - && \
-    tar xzf libressl.tar.gz && \
-    rm -f libressl.tar.gz && \
-    cd libressl-2.6.4 && \
+    cd libressl && \
+    tar xzf ../libressl.tar.gz tar --strip-components=1 && \
+    rm -f ../libressl.tar.gz && \
     AR='gcc-ar' RABLIB='gcc-ranlib' ./configure --disable-dependency-tracking --prefix=/opt/libressl && \
     AR='gcc-ar' RABLIB='gcc-ranlib' make check && make install && \
     echo /opt/libressl/lib > /etc/ld.so.conf.d/libressl.conf && ldconfig
-ENV UNBOUND_VERSION="1.6.8" \
-    UNBOUND_SHA256="e3b428e33f56a45417107448418865fe08d58e0e7fea199b855515f60884dd49" \
+
+ENV UNBOUND_SHA256="e3b428e33f56a45417107448418865fe08d58e0e7fea199b855515f60884dd49" \
     UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.6.8.tar.gz"
 RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     set -x && \
@@ -33,13 +31,13 @@ RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
       libevent-dev  \
       libexpat1   \
       libexpat1-dev && \
-    mkdir -p /tmp/src && \
+    mkdir -p /tmp/src/unbound && \
     cd /tmp/src && \
     curl -sSL $UNBOUND_DOWNLOAD_URL -o unbound.tar.gz && \
     echo "${UNBOUND_SHA256} *unbound.tar.gz" | sha256sum -c - && \
-    tar xzf unbound.tar.gz && \
-    rm -f unbound.tar.gz && \
-    cd unbound-1.6.8 && \
+    cd unbound && \
+    tar xzf unbound.tar.gz --strip-components=1 && \
+    rm -f ../unbound.tar.gz && \
     groupadd unbound && \
     useradd -g unbound -s /etc -d /dev/null _unbound && \
     ./configure AR='gcc-ar' RANLIB='gcc-ranlib' --prefix=/opt/unbound --with-pthreads \
