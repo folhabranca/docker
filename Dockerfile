@@ -15,7 +15,7 @@ RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     curl -sSL $LIBRESSL_DOWNLOAD_URL -o libressl.tar.gz && \
     echo "${LIBRESSL_SHA256} *libressl.tar.gz" | sha256sum -c - && \
     cd libressl && \
-    tar xzf ../libressl.tar.gz tar --strip-components=1 && \
+    tar xzf ../libressl.tar.gz --strip-components=1 && \
     rm -f ../libressl.tar.gz && \
     AR='gcc-ar' RABLIB='gcc-ranlib' ./configure --disable-dependency-tracking --prefix=/opt/libressl && \
     AR='gcc-ar' RABLIB='gcc-ranlib' make check && make install && \
