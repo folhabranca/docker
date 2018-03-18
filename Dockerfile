@@ -21,8 +21,8 @@ RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     AR='gcc-ar' RABLIB='gcc-ranlib' make check && make install && \
     echo /opt/libressl/lib > /etc/ld.so.conf.d/libressl.conf && ldconfig
 
-ENV UNBOUND_SHA256="e3b428e33f56a45417107448418865fe08d58e0e7fea199b855515f60884dd49" \
-    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.6.8.tar.gz"
+ENV UNBOUND_SHA256="94dd9071fb13d8ccd122a3ac67c4524a3324d0e771fc7a8a7c49af8abfb926a2" \
+    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.7.0.tar.gz"
 RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     set -x && \
     DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
