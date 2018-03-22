@@ -4,8 +4,8 @@ RUN set -x && \
       bsdmainutils \
       ldnsutils && \
       rm -rf /var/lib/apt/lists/*
-ENV LIBRESSL_SHA256="638a20c2f9e99ee283a841cd787ab4d846d1880e180c4e96904fc327d419d11f" \
-    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.6.4.tar.gz"
+ENV LIBRESSL_SHA256="50ce6d6f88dea73a3efca62b0a9e6ca75292bdee6c9293efd6a771cfdb28cdee" \
+    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.7.0.tar.gz"
 RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
     set -x && \
     DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
