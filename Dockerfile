@@ -1,8 +1,7 @@
 FROM debian:buster-slim AS build-env
 RUN set -x && \
     apt-get update && apt-get dist-upgrade -y && apt-get install -y --no-install-recommends \
-      bsdmainutils \
-      ldnsutils && \
+      bsdmainutils && \
       rm -rf /var/lib/apt/lists/*
 ENV LIBRESSL_SHA256="50ce6d6f88dea73a3efca62b0a9e6ca75292bdee6c9293efd6a771cfdb28cdee" \
     LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.7.0.tar.gz"
@@ -65,7 +64,6 @@ COPY --from=build-env /opt/ /opt/
 RUN set -x && \
     apt-get update && apt-get dist-upgrade -y && apt-get install -y --no-install-recommends \
       bsdmainutils \
-      ldnsutils \
       libevent-2.1 \
       libexpat1 && \
     adduser --disabled-login --disabled-password --shell /bin/false \ 
