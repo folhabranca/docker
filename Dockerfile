@@ -1,48 +1,46 @@
-FROM debian:buster-slim AS build-env
-RUN set -x && \
-    apt-get update && apt-get dist-upgrade -y && apt-get install -y --no-install-recommends \
-      bsdmainutils && \
-      rm -rf /var/lib/apt/lists/*
-ENV LIBRESSL_SHA256="917a8779c342177ff3751a2bf955d0262d1d8916a4b408930c45cef326700995" \
-    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.7.2.tar.gz"
-RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
+FROM alpine:latest AS build-env
+
+ENV LIBRESSL_SHA="5fafff32bc4effa98c00278206f0aeca92652c6a8101b2c5da3904a5a3deead2d1e3ce979c644b8dc6060ec216eb878a5069324a0396c0b1d7b6f8169d509e9b" \
+    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.7.3.tar.gz"
+RUN BUILD_DEPS='build-base automake autoconf libtool ca-certificates curl file linux-headers' && \
     set -x && \
-    DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
+    apk add --no-cache  \
       $BUILD_DEPS && \
     mkdir -p /tmp/src/libressl && \
     cd /tmp/src && \
     curl -sSL $LIBRESSL_DOWNLOAD_URL -o libressl.tar.gz && \
-    echo "${LIBRESSL_SHA256} *libressl.tar.gz" | sha256sum -c - && \
+    echo "${LIBRESSL_SHA} *libressl.tar.gz" | sha512sum -c - && \
     cd libressl && \
     tar xzf ../libressl.tar.gz --strip-components=1 && \
     rm -f ../libressl.tar.gz && \
-    AR='gcc-ar' RABLIB='gcc-ranlib' ./configure --disable-dependency-tracking --prefix=/opt/libressl && \
-    AR='gcc-ar' RABLIB='gcc-ranlib' make check && make install && \
-    echo /opt/libressl/lib > /etc/ld.so.conf.d/libressl.conf && ldconfig
+    autoreconf -vif && \
+    ./configure --prefix=/opt/libressl && \
+    make check && make install
 
-ENV UNBOUND_SHA256="94dd9071fb13d8ccd122a3ac67c4524a3324d0e771fc7a8a7c49af8abfb926a2" \
-    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.7.0.tar.gz"
-RUN BUILD_DEPS='ca-certificates curl gcc libc-dev make file' && \
+ENV UNBOUND_SHA="99a68abf1f60f6ea80cf2973906df44da9c577d8cac969824af1ce9ca385a2e84dd684937480da87cb73c7dc41ad5c00b0013ec74103eadb8fd7dc6f98a89255" \
+    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.7.1.tar.gz"
+RUN BUILD_DEPS='build-base ca-certificates curl file linux-headers' && \
     set -x && \
-    DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
+    apk add --no-cache \
       $BUILD_DEPS  \
-      libevent-2.1  \
+      libevent  \
       libevent-dev  \
-      libexpat1   \
-      libexpat1-dev && \
+      expat   \
+      expat-dev && \
     mkdir -p /tmp/src/unbound && \
     cd /tmp/src && \
     curl -sSL $UNBOUND_DOWNLOAD_URL -o unbound.tar.gz && \
-    echo "${UNBOUND_SHA256} *unbound.tar.gz" | sha256sum -c - && \
+    echo "${UNBOUND_SHA} *unbound.tar.gz" | sha512sum -c - && \
     cd unbound && \
     tar xzf ../unbound.tar.gz --strip-components=1 && \
     rm -f ../unbound.tar.gz && \
-    groupadd unbound && \
-    useradd -g unbound -s /etc -d /dev/null _unbound && \
+    addgroup -S unbound 2>/dev/null && \
+    adduser -S -D -H -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null && \
+    AR='gcc-ar' RANLIB='gcc-ranlib' autoreconf -vif && \
     ./configure AR='gcc-ar' RANLIB='gcc-ranlib' --prefix=/opt/unbound --with-pthreads \
         --with-username=unbound --with-ssl=/opt/libressl --with-libevent \
         --enable-event-api && \
-    AR='gcc-ar' RANLIB='gcc-ranlib' make install && \
+    make install && \
     curl -s ftp://FTP.INTERNIC.NET/domain/named.cache -o /opt/unbound/etc/unbound/root.hints && \
     rm /opt/unbound/etc/unbound/unbound.conf
 RUN set -x && \
@@ -59,15 +57,14 @@ RUN set -x && \
     strip --strip-all /opt/unbound/sbin/unbound-control && \
     strip --strip-all /opt/unbound/sbin/unbound-host
 # ----------------------------------------------------------------------------
-FROM debian:buster-slim
+FROM alpine:latest
 COPY --from=build-env /opt/ /opt/
 RUN set -x && \
-    apt-get update && apt-get dist-upgrade -y && apt-get install -y --no-install-recommends \
-      bsdmainutils \
-      libevent-2.1 \
-      libexpat1 && \
-    adduser --disabled-login --disabled-password --shell /bin/false \ 
-          -uid 63423 --system --group --home /var/lib/unbound unbound && \
+    apk add --no-cache \
+      libevent \
+      expat && \
+    addgroup -S unbound 2>/dev/null && \
+    adduser -S -D -H -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null && \
     find /usr -user root -perm -4000 -exec chmod a-s {} \; && \
     mkdir -p /opt/unbound/etc/unbound/unbound.conf.d && \
     mkdir -p /var/log/unbound && chown unbound.unbound /var/log/unbound && \
