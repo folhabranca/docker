@@ -63,8 +63,8 @@ RUN set -x && \
     apk add --no-cache \
       libevent \
       expat && \
-    addgroup -S unbound 2>/dev/null && \
-    adduser -S -D -H -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null && \
+    addgroup -g 59834 -S unbound 2>/dev/null && \
+    adduser -S -D -H -u 59834 -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null && \
     find /usr -user root -perm -4000 -exec chmod a-s {} \; && \
     mkdir -p /opt/unbound/etc/unbound/unbound.conf.d && \
     mkdir -p /var/log/unbound && chown unbound.unbound /var/log/unbound && \
