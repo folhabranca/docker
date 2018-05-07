@@ -19,7 +19,7 @@ RUN BUILD_DEPS='build-base automake autoconf libtool ca-certificates curl file l
 
 ENV UNBOUND_SHA="99a68abf1f60f6ea80cf2973906df44da9c577d8cac969824af1ce9ca385a2e84dd684937480da87cb73c7dc41ad5c00b0013ec74103eadb8fd7dc6f98a89255" \
     UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.7.1.tar.gz"
-RUN BUILD_DEPS='build-base ca-certificates curl file linux-headers' && \
+RUN BUILD_DEPS='build-base curl file linux-headers' && \
     set -x && \
     apk add --no-cache \
       $BUILD_DEPS  \
@@ -65,10 +65,9 @@ RUN set -x && \
       expat && \
     addgroup -g 59834 -S unbound 2>/dev/null && \
     adduser -S -D -H -u 59834 -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null && \
-    find /usr -user root -perm -4000 -exec chmod a-s {} \; && \
     mkdir -p /opt/unbound/etc/unbound/unbound.conf.d && \
     mkdir -p /var/log/unbound && chown unbound.unbound /var/log/unbound && \
-    rm -rf /var/lib/apt/lists/* /usr/share/docs/* /usr/share/man/* /var/log/*
+    rm -rf /usr/share/docs/* /usr/share/man/* /var/log/*
 COPY resources/unbound.sh /
 RUN chmod +x /unbound.sh
 COPY resources/unbound.conf /opt/unbound/etc/unbound/
