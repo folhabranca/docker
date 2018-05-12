@@ -20,6 +20,7 @@ USE_LOGFILE=${ENABLE_LOGFILE:-no}
 USE_CHROOT=${ENABLE_LOGFILE:-yes}
 ENABLE_REMOTE_CONTROL=${ENABLE_REMOTE_CONTROL:-no}
 DISABLE_CONF_VARS=${DISABLE_CONF_VARS:-no}
+UPDATE_TRUST_ANCHOR=${UPDATE_TRUST_ANCHOR:-yes}
 
 if [ "x${DISABLE_CONF_VARS}" = "xno" ]; then
   sed 's/{{PORT}}/'"${PORT}"'/' -i /opt/unbound/etc/unbound/unbound.conf
@@ -63,9 +64,11 @@ else
   chown unbound.unbound /opt/unbound/etc/unbound
 fi
 
-
-/opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/root.key
-chown unbound.unbound /opt/unbound/etc/unbound/root.key
+if [ "x${UPDATE_TRUST_ANCHOR}" = "xyes" ]; then
+  echo "Update root trust anchor for DNSSEC validation."
+  /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/root.key
+  chown unbound.unbound /opt/unbound/etc/unbound/root.key
+fi
 
 cat /opt/unbound/etc/unbound/unbound.conf
 echo "-----------------------------------------------"
