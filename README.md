@@ -48,6 +48,8 @@ These options can be set via the environment variable -e flag:
 - **ENABLE_REMOTE_CONTROL**: Enable or disable the unbound-control command. (Default: "no", Values: "yes, no")
 - **USE_LOGFILE**: Use log file instead of stdout (Default: "no", Values: "yes, no")
 - **USE_CHROOT**: Use chroot while running unbound. (Default: "yes", Possible values: "yes,no")
+- **UPDATE_TRUST_ANCHOR**: Enable oder Disable update of the root trust anchor for DNSSEC validation at startup (Default: "yes", Values: "yes, no")
+- **DISABLE_CONF_VARS**: Enable oder Disable update of unbound.conf through environment variable (Default: "no", Values: "yes, no")
 
 # More config control
 
