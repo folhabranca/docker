@@ -1,7 +1,7 @@
 FROM alpine:latest AS build-env
 
-ENV LIBRESSL_SHA="5fafff32bc4effa98c00278206f0aeca92652c6a8101b2c5da3904a5a3deead2d1e3ce979c644b8dc6060ec216eb878a5069324a0396c0b1d7b6f8169d509e9b" \
-    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.7.3.tar.gz"
+ENV LIBRESSL_SHA="1cd82a1bff4f655251b5feb0c850f4164e0fd548e4b404407370f74dcc75c205f42efc7787a157eecac84cbbe46af48cb63f46b3fef75f4a0a9ea19a5863a691" \
+    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.7.4.tar.gz"
 RUN BUILD_DEPS='build-base automake autoconf libtool ca-certificates curl file linux-headers' && \
     set -x && \
     apk add --no-cache  \
@@ -17,8 +17,8 @@ RUN BUILD_DEPS='build-base automake autoconf libtool ca-certificates curl file l
     ./configure --prefix=/opt/libressl && \
     make check && make install
 
-ENV UNBOUND_SHA="99a68abf1f60f6ea80cf2973906df44da9c577d8cac969824af1ce9ca385a2e84dd684937480da87cb73c7dc41ad5c00b0013ec74103eadb8fd7dc6f98a89255" \
-    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.7.1.tar.gz"
+ENV UNBOUND_SHA="a5b0794b15d72a89bd6090f6febca3199e8c66f779c5da7f07dfbacc17bd62f340a3392b9086d39f28f7ab5942aba24810347fbf0e1ea22c5641d2b00fb29387" \
+    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.7.2.tar.gz"
 RUN BUILD_DEPS='build-base curl file linux-headers' && \
     set -x && \
     apk add --no-cache \
