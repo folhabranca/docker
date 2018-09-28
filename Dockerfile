@@ -17,8 +17,8 @@ RUN BUILD_DEPS='build-base automake autoconf libtool ca-certificates curl file l
     ./configure --prefix=/opt/libressl && \
     make check && make install
 
-ENV UNBOUND_SHA="34b2e93660e519b2eccefef26a6c7ac09fa3312384cc3bc449ff2b10743bd86bfeb36ec19d35eb913f8d0a3d91ad7923260a66fc799f28b0a2cc06741d80f27a" \
-    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.7.3.tar.gz"
+ENV UNBOUND_SHA="6c46f5b86b5bd98a7b549b660173d487e59e65385cebd7bc29429b4fee69f2b490651a409c57b072b9b604fa98e289fa82eeecfea8779900038c25b28a6bd064" \
+    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.8.0.tar.gz"
 RUN BUILD_DEPS='build-base curl file linux-headers' && \
     set -x && \
     apk add --no-cache \
