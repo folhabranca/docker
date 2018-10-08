@@ -32,13 +32,13 @@ If you want to override the nameserver in the unbound container, you can use:
 # Configuration
 These options can be set via the environment variable -e flag:
 
-- **INTERFACE**: Sets the interface to listen to. (Default: 0.0.0.0, Values: \<IP addr>)
-- **PORT**: Port number that unbound will listen. This has to be the same of the docker run. (Default: 53, Values: \<<1-65535>)
+- **INTERFACE**: Sets the interface to listen to. (Default: 0.0.0.0, Values: <IP addr>)
+- **PORT**: Port number that unbound will listen. This has to be the same of the docker run. (Default: 53, Values: <1-65535>)
 - **DO_IPV6**: Enable or disable ipv6. (Default: "yes", Values: "yes, no")
 - **DO_IPV4**: Enable or disable ipv4. (Default: "yes", Values: "yes, no")
 - **DO_UDP**: Enable or disable udp. (Default: "yes", Values: "yes, no")
 - **DO_TCP**: Enable or disable tcp. (Default: "yes", Values: "yes, no")
-- **VERBOSITY**: Verbosity number, 0 is least verbose. (Default: "0", Values: "\<<integer>")
+- **VERBOSITY**: Verbosity number, 0 is least verbose. (Default: "0", Values: "<integer>")
 - **SO_REUSEPORT**: Use SO_REUSEPORT to distribute queries over threads. (Default: "no", Values: "yes, no")
 - **HIDE_IDENTITY**: Enable to not answer id.server and hostname.bind queries. (Default: "no", Values: "yes, no")
 - **HIDE_VERSION**: Enable to not answer version.server and version.bind queries. (Default: "no", Values: "yes, no")
