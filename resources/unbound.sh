@@ -48,9 +48,9 @@ if [ "x${DISABLE_CONF_VARS}" = "xno" ]; then
   if [ "x${USE_LOGFILE}" = "xyes" ]; then
     mkdir -p /opt/unbound/etc/unbound/log && \
        chown unbound.unbound /opt/unbound/etc/unbound/log
-    sed 's/{{LOGFILE}}/'"log/unbound.log"'/' -i /opt/unbound/etc/unbound/unbound.conf
+    sed 's/{{LOGFILE}}/log/unbound.log/' -i /opt/unbound/etc/unbound/unbound.conf
   else
-    sed 's/{{LOGFILE}}/'""'/' -i /opt/unbound/etc/unbound/unbound.conf
+    sed 's/{{LOGFILE}}//' -i /opt/unbound/etc/unbound/unbound.conf
   fi
 fi
 
