@@ -25,8 +25,8 @@ services:
       - RRSET_ROUNDROBIN=yes
       - USE_CAPS_FOR_ID=yes
       - ENABLE_REMOTE_CONTROL=yes
-      - USE_LOGFILE=no
-      - USE_CHROOT=yes
+      - ENABLE_LOGFILE=no
+      - ENABLE_CHROOT=yes
     cap_add:
       - net_admin
     restart: always
