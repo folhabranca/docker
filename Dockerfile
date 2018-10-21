@@ -1,7 +1,7 @@
 FROM alpine:latest AS build-env
 
-ENV LIBRESSL_SHA="1cd82a1bff4f655251b5feb0c850f4164e0fd548e4b404407370f74dcc75c205f42efc7787a157eecac84cbbe46af48cb63f46b3fef75f4a0a9ea19a5863a691" \
-    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.7.4.tar.gz"
+ENV LIBRESSL_SHA="bfcc55904efbb591c9edd56169d611e735108dfc6a49f771a64ad1ddd028d3a658f5593116c379911edc77f95eba475daec9c0adea0549e8b4b94d1072adf733" \
+    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.8.2.tar.gz"
 RUN BUILD_DEPS='build-base automake autoconf libtool ca-certificates curl file linux-headers' && \
     set -x && \
     apk add --no-cache  \
