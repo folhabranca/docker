@@ -14,8 +14,10 @@ RUN BUILD_DEPS='build-base curl file linux-headers'; \
     cd libressl; \
     tar xzf ../libressl.tar.gz --strip-components=1; \
     rm -f ../libressl.tar.gz; \
+    CFLAGS="-DLIBRESSL_APPS=off -DLIBRESSL_TESTS=off"; \
     ./configure --prefix=/opt/libressl; \
-    make check && make install
+    make -j$(getconf _NPROCESSORS_ONLN); \
+    make install
 
 ENV UNBOUND_VERSION="1.8.1" \
     UNBOUND_SHA="1872a980e06258d28d2bc7f69a4c56fc07e03e4c9856161e89abc28527fff5812a47ea9927fd362bca690e3a87b95046ac96c8beeccaeb8596458f140c33b217"
@@ -38,10 +40,10 @@ RUN BUILD_DEPS='build-base curl file linux-headers';  \
     rm -f ../unbound.tar.gz; \
     addgroup -S unbound 2>/dev/null; \
     adduser -S -D -H -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null; \
-    AR='gcc-ar' RANLIB='gcc-ranlib' autoreconf -vif; \
-    ./configure AR='gcc-ar' RANLIB='gcc-ranlib' --prefix=/opt/unbound --with-pthreads \
+    AR="gcc-ar" RANLIB="gcc-ranlib" ./configure --prefix=/opt/unbound --with-pthreads \
         --with-username=unbound --with-ssl=/opt/libressl --with-libevent \
-        --enable-event-api; \
+        --enable-event-api --enable-static=no ; \
+    make -j$(getconf _NPROCESSORS_ONLN); \
     make install; \
     curl -s ftp://FTP.INTERNIC.NET/domain/named.cache -o /opt/unbound/etc/unbound/root.hints; \
     rm /opt/unbound/etc/unbound/unbound.conf
