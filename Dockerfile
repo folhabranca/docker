@@ -3,18 +3,17 @@ FROM alpine:latest AS build-env
 ENV LIBRESSL_VERSION="2.8.2" \
     LIBRESSL_SHA="bfcc55904efbb591c9edd56169d611e735108dfc6a49f771a64ad1ddd028d3a658f5593116c379911edc77f95eba475daec9c0adea0549e8b4b94d1072adf733"
 
-RUN BUILD_DEPS='build-base automake autoconf libtool ca-certificates curl file linux-headers'; \
+RUN BUILD_DEPS='build-base curl file linux-headers'; \
     LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz"; \
     set -ex; \
     apk add --no-cache $BUILD_DEPS; \
-    mkdira -p /tmp/src/libressl; \
+    mkdir -p /tmp/src/libressl; \
     cd /tmp/src; \
     curl -sSL $LIBRESSL_DOWNLOAD_URL -o libressl.tar.gz; \
     echo "${LIBRESSL_SHA} *libressl.tar.gz" | sha512sum -c - ; \
     cd libressl; \
     tar xzf ../libressl.tar.gz --strip-components=1; \
     rm -f ../libressl.tar.gz; \
-    autoreconf -vif; \
     ./configure --prefix=/opt/libressl; \
     make check && make install
 
