@@ -51,6 +51,7 @@ RUN BUILD_DEPS='build-base curl file linux-headers';  \
 RUN set -ex ; \
     rm -fr /opt/libressl/share; \
     rm -fr /opt/libressl/include/*;  \
+    rm -fr /opt/libressl/lib/libtls.* /opt/libressl/bin/ocspcheck;  \
     rm -fr /opt/libressl/lib/pkgconfig;  \
     rm -fr /opt/unbound/lib/pkgconfig;  \
     rm /opt/libressl/lib/*.la;  \
