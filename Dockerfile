@@ -1,8 +1,10 @@
 FROM alpine:latest AS build-env
 
-ENV LIBRESSL_SHA="bfcc55904efbb591c9edd56169d611e735108dfc6a49f771a64ad1ddd028d3a658f5593116c379911edc77f95eba475daec9c0adea0549e8b4b94d1072adf733" \
-    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.8.2.tar.gz"
+ENV LIBRESSL_VERSION="2.8.2" \
+    LIBRESSL_SHA="bfcc55904efbb591c9edd56169d611e735108dfc6a49f771a64ad1ddd028d3a658f5593116c379911edc77f95eba475daec9c0adea0549e8b4b94d1072adf733"
+
 RUN BUILD_DEPS='build-base automake autoconf libtool ca-certificates curl file linux-headers' && \
+    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz" && \
     set -ex && \
     apk add --no-cache  \
       $BUILD_DEPS && \
@@ -17,9 +19,11 @@ RUN BUILD_DEPS='build-base automake autoconf libtool ca-certificates curl file l
     ./configure --prefix=/opt/libressl && \
     make check && make install
 
-ENV UNBOUND_SHA="1872a980e06258d28d2bc7f69a4c56fc07e03e4c9856161e89abc28527fff5812a47ea9927fd362bca690e3a87b95046ac96c8beeccaeb8596458f140c33b217" \
-    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.8.1.tar.gz"
+ENV UNBOUND_VERSION="1.8.1" \
+    UNBOUND_SHA="1872a980e06258d28d2bc7f69a4c56fc07e03e4c9856161e89abc28527fff5812a47ea9927fd362bca690e3a87b95046ac96c8beeccaeb8596458f140c33b217"
+
 RUN BUILD_DEPS='build-base curl file linux-headers' && \
+    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz" && \
     set -ex && \
     apk add --no-cache \
       $BUILD_DEPS  \
