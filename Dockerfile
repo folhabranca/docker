@@ -15,7 +15,7 @@ RUN BUILD_DEPS='build-base curl file linux-headers'; \
     tar xzf ../libressl.tar.gz --strip-components=1; \
     rm -f ../libressl.tar.gz; \
     CFLAGS="-DLIBRESSL_APPS=off -DLIBRESSL_TESTS=off"; \
-    ./configure --prefix=/opt/libressl; \
+    ./configure --prefix=/opt/libressl --enable-static=no; \
     make -j$(getconf _NPROCESSORS_ONLN); \
     make install
 
@@ -51,8 +51,10 @@ RUN BUILD_DEPS='build-base curl file linux-headers';  \
 RUN set -ex ; \
     rm -fr /opt/libressl/share; \
     rm -fr /opt/libressl/include/*;  \
-    rm /opt/libressl/lib/*.a /opt/libressl/lib/*.la;  \
-    rm -fr /opt/unbound/share /opt/unbound/include /opt/unbound/lib/*.a /opt/unbound/lib/*.la; \
+    rm -fr /opt/libressl/lib/pkgconfig;  \
+    rm -fr /opt/unbound/lib/pkgconfig;  \
+    rm /opt/libressl/lib/*.la;  \
+    rm -fr /opt/unbound/share /opt/unbound/include /opt/unbound/lib/*.la; \
     find /opt/libressl/bin -type f | xargs strip --strip-all; \
     find /opt/libressl/lib/lib* -type f | xargs strip --strip-all; \
     find /opt/unbound/lib/lib* -type f | xargs strip --strip-all; \
