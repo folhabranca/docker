@@ -3,7 +3,7 @@ FROM alpine:latest AS build-env
 ENV LIBRESSL_SHA="bfcc55904efbb591c9edd56169d611e735108dfc6a49f771a64ad1ddd028d3a658f5593116c379911edc77f95eba475daec9c0adea0549e8b4b94d1072adf733" \
     LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.8.2.tar.gz"
 RUN BUILD_DEPS='build-base automake autoconf libtool ca-certificates curl file linux-headers' && \
-    set -x && \
+    set -ex && \
     apk add --no-cache  \
       $BUILD_DEPS && \
     mkdir -p /tmp/src/libressl && \
@@ -20,7 +20,7 @@ RUN BUILD_DEPS='build-base automake autoconf libtool ca-certificates curl file l
 ENV UNBOUND_SHA="1872a980e06258d28d2bc7f69a4c56fc07e03e4c9856161e89abc28527fff5812a47ea9927fd362bca690e3a87b95046ac96c8beeccaeb8596458f140c33b217" \
     UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-1.8.1.tar.gz"
 RUN BUILD_DEPS='build-base curl file linux-headers' && \
-    set -x && \
+    set -ex && \
     apk add --no-cache \
       $BUILD_DEPS  \
       libevent  \
@@ -43,7 +43,7 @@ RUN BUILD_DEPS='build-base curl file linux-headers' && \
     make install && \
     curl -s ftp://FTP.INTERNIC.NET/domain/named.cache -o /opt/unbound/etc/unbound/root.hints && \
     rm /opt/unbound/etc/unbound/unbound.conf
-RUN set -x && \
+RUN set -ex && \
     rm -fr /opt/libressl/share && \
     rm -fr /opt/libressl/include/* && \
     rm /opt/libressl/lib/*.a /opt/libressl/lib/*.la && \
@@ -59,7 +59,7 @@ RUN set -x && \
 # ----------------------------------------------------------------------------
 FROM alpine:latest
 COPY --from=build-env /opt/ /opt/
-RUN set -x && \
+RUN set -ex && \
     apk add --no-cache \
       libevent \
       expat && \
