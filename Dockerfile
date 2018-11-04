@@ -40,9 +40,9 @@ RUN BUILD_DEPS='build-base curl file linux-headers';  \
     rm -f ../unbound.tar.gz; \
     addgroup -S unbound 2>/dev/null; \
     adduser -S -D -H -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null; \
-    AR="gcc-ar" RANLIB="gcc-ranlib" ./configure --prefix=/opt/unbound --with-pthreads \
+    RANLIB="gcc-ranlib" ./configure --prefix=/opt/unbound --with-pthreads \
         --with-username=unbound --with-ssl=/opt/libressl --with-libevent \
-        --enable-event-api --enable-static=no --enable-pie  --enable-relro-now; \
+        --enable-event-api --enable-static=no --enable-pie  --enable-relro-now --disable-rpath; \
     make -j$(getconf _NPROCESSORS_ONLN); \
     make install; \
     curl -s ftp://FTP.INTERNIC.NET/domain/named.cache -o /opt/unbound/etc/unbound/root.hints; \
