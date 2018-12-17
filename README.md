@@ -14,8 +14,8 @@ so, this means:
 
 # Current versions
 
-- unbound: **1.8.1** (compiled, not package)
-- libressl: **2.8.2** (compiled, not package)
+- unbound: **1.8.3** (compiled, not package)
+- libressl: **2.8.3** (compiled, not package)
 - Alpine Linux based image
 
 # Running

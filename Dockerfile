@@ -1,7 +1,7 @@
 FROM alpine:latest AS build-env
 
-ENV LIBRESSL_VERSION="2.8.2" \
-    LIBRESSL_SHA="bfcc55904efbb591c9edd56169d611e735108dfc6a49f771a64ad1ddd028d3a658f5593116c379911edc77f95eba475daec9c0adea0549e8b4b94d1072adf733"
+ENV LIBRESSL_VERSION="2.8.3" \
+    LIBRESSL_SHA="3967e08b3dc2277bf77057ea1f11148df7f96a2203cd21cf841902f2a1ec11320384a001d01fa58154d35612f7981bf89d5b1a60a2387713d5657677f76cc682"
 
 RUN BUILD_DEPS='build-base curl file linux-headers'; \
     LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz"; \
@@ -19,8 +19,8 @@ RUN BUILD_DEPS='build-base curl file linux-headers'; \
     make -j$(getconf _NPROCESSORS_ONLN); \
     make install
 
-ENV UNBOUND_VERSION="1.8.2" \
-    UNBOUND_SHA="a775c799d41ede3c2df82a5cf4d419ec1d037d84c9bb7f2f4216727afc1e3d82c991d1a1ee99baf315530c094a416004e836312ba1ee2b7b17a4a60454878cb5"
+ENV UNBOUND_VERSION="1.8.3" \
+    UNBOUND_SHA="545486ccce288a6ef1937d82653a43a11dbd3aec7b8d0036e7fd107e537cdfc935def9db9178c2eb418d6f4b0849a242a0be1dea966f3e9e0145aa7266e483ad"
 
 RUN BUILD_DEPS='build-base curl file linux-headers';  \
     UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz"; \
