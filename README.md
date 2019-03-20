@@ -120,3 +120,8 @@ Notes:
 # Known to work
 
 This image was tested with the latest docker-ce software. Be sure to upgrade it if you are having problem.
+
+# Future work
+
+- Make DNS over TLS more easy to use
+- Try BoringTLS
