@@ -71,20 +71,20 @@ FROM alpine:latest
 
 COPY --from=build-env /opt/ /opt/
 
+COPY resources/unbound.sh /
+COPY resources/unbound.conf /opt/unbound/etc/unbound/
+COPY resources/allow.conf /opt/unbound/etc/unbound/unbound.conf.d/
+
 RUN set -ex; \
     apk add --no-cache libevent expat; \
     addgroup -g 59834 -S unbound 2>/dev/null; \
     adduser -S -D -H -u 59834 -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null; \
     mkdir -p /opt/unbound/etc/unbound/unbound.conf.d; \
     mkdir -p /var/log/unbound && chown unbound.unbound /var/log/unbound; \
-    rm -rf /usr/share/docs/* /usr/share/man/* /var/log/*
-
-COPY resources/unbound.sh /
-
-RUN chmod +x /unbound.sh
-
-COPY resources/unbound.conf /opt/unbound/etc/unbound/
-COPY resources/allow.conf /opt/unbound/etc/unbound/unbound.conf.d/
+    chmod +x /unbound.sh; \
+    rm -rf /usr/share/docs/* /usr/share/man/* /var/log/*; \
+    /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/root.key; \
+    chown unbound.unbound /opt/unbound/etc/unbound/root.key
 
 EXPOSE 53/udp
 
