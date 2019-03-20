@@ -21,6 +21,9 @@ USE_CHROOT=${ENABLE_CHROOT:-yes}
 ENABLE_REMOTE_CONTROL=${ENABLE_REMOTE_CONTROL:-no}
 DISABLE_CONF_VARS=${DISABLE_CONF_VARS:-no}
 UPDATE_TRUST_ANCHOR=${UPDATE_TRUST_ANCHOR:-yes}
+VERSION=$(/opt/unbound/sbin/unbound -h| tail -5 | head -3)
+
+echo ${VERSION}
 
 if [ "x${DISABLE_CONF_VARS}" = "xno" ]; then
   sed 's/{{PORT}}/'"${PORT}"'/' -i /opt/unbound/etc/unbound/unbound.conf
