@@ -19,8 +19,8 @@ RUN BUILD_DEPS='build-base curl file linux-headers'; \
     make -j$(getconf _NPROCESSORS_ONLN); \
     make install
 
-ENV UNBOUND_VERSION="1.9.0" \
-    UNBOUND_SHA="7dfa8e078507fc24a2d0938eea590389453bacfcac023f1a41af19350ea1f7b87d0c82d7eead121a11068921292a96865e177274ff27ed8b8868445f80f7baf6"
+ENV UNBOUND_VERSION="1.9.1" \
+    UNBOUND_SHA="5dfac7ce3892f73109fdfe0f81863643b1f4c10cee2d4e2d1a28132f1b9ea4d4f89242e4e6348fdadf998f1c75d53577cbf4f719e98faa1342fc3c5de2e8903d"
 
 RUN BUILD_DEPS='build-base curl file linux-headers';  \
     UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz"; \
