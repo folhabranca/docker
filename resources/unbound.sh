@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/sh -e
 
 PATH=$PATH:/opt/libressl/bin
 
@@ -68,8 +68,7 @@ else
 fi
 
 if [ "x${UPDATE_TRUST_ANCHOR}" = "xyes" ]; then
-  echo "Update root trust anchor for DNSSEC validation."
-  /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/root.key
+  /opt/unbound/sbin/unbound-anchor -v -a /opt/unbound/etc/unbound/root.key || true
   chown unbound.unbound /opt/unbound/etc/unbound/root.key
 fi
 
