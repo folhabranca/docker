@@ -44,8 +44,10 @@ RUN BUILD_DEPS='build-base curl file linux-headers';  \
         --with-username=unbound --with-ssl=/opt/libressl --with-libevent \
         --enable-event-api --enable-static=no --enable-pie  --enable-relro-now;  \
     make -j$(getconf _NPROCESSORS_ONLN); \
+    mkdir -p /opt/unbound/etc/unbound/unbound.conf.d; \
     make install; \
     curl -s ftp://FTP.INTERNIC.NET/domain/named.cache -o /opt/unbound/etc/unbound/root.hints; \
+    /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/root.key; \
     rm /opt/unbound/etc/unbound/unbound.conf
 
 RUN set -ex ; \
@@ -79,11 +81,9 @@ RUN set -ex; \
     apk add --no-cache libevent expat; \
     addgroup -g 59834 -S unbound 2>/dev/null; \
     adduser -S -D -H -u 59834 -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null; \
-    mkdir -p /opt/unbound/etc/unbound/unbound.conf.d; \
     mkdir -p /var/log/unbound && chown unbound.unbound /var/log/unbound; \
     chmod +x /unbound.sh; \
     rm -rf /usr/share/docs/* /usr/share/man/* /var/log/*; \
-    /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/root.key; \
     chown unbound.unbound /opt/unbound/etc/unbound/root.key
 
 EXPOSE 53/udp
