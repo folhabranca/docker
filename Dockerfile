@@ -47,7 +47,7 @@ RUN BUILD_DEPS='build-base curl file linux-headers';  \
     mkdir -p /opt/unbound/etc/unbound/unbound.conf.d; \
     make install; \
     curl -s ftp://FTP.INTERNIC.NET/domain/named.cache -o /opt/unbound/etc/unbound/root.hints; \
-    /opt/unbound/sbin/unbound-anchor -a /opt/unbound/etc/unbound/root.key; \
+    /opt/unbound/sbin/unbound-anchor -v  -a /opt/unbound/etc/unbound/root.key || true; \
     rm /opt/unbound/etc/unbound/unbound.conf
 
 RUN set -ex ; \
