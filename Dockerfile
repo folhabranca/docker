@@ -83,8 +83,8 @@ RUN set -ex; \
     adduser -S -D -H -u 59834 -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null; \
     mkdir -p /var/log/unbound && chown unbound.unbound /var/log/unbound; \
     chmod +x /unbound.sh; \
-    rm -rf /usr/share/docs/* /usr/share/man/* /var/log/*; \
-    chown unbound.unbound /opt/unbound/etc/unbound/root.key
+    chown unbound.unbound /opt/unbound/etc/unbound/root.key; \
+    rm -rf /usr/share/docs/* /usr/share/man/* /var/log/*
 
 EXPOSE 53/udp
 
