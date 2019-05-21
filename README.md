@@ -15,7 +15,7 @@ so, this means:
 # Current versions
 
 - unbound: **1.9.1** (compiled, not package)
-- libressl: **2.9.1** (compiled, not package)
+- libressl: **2.9.2** (compiled, not package)
 - Alpine Linux based image (latest stable version)
 
 # Running
