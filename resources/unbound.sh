@@ -72,6 +72,7 @@ fi
 if [ "x${UPDATE_TRUST_ANCHOR}" = "xyes" ]; then
   /opt/unbound/sbin/unbound-anchor -v -a /opt/unbound/etc/unbound/root.key || true
   chown unbound.unbound /opt/unbound/etc/unbound/root.key
+  chmod 600 /opt/unbound/etc/unbound/root.key
 fi
 
 cat /opt/unbound/etc/unbound/unbound.conf

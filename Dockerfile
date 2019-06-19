@@ -88,6 +88,7 @@ RUN set -ex; \
     mkdir -p /var/log/unbound && chown unbound.unbound /var/log/unbound; \
     chmod +x /unbound.sh; \
     chown unbound.unbound /opt/unbound/etc/unbound/root.key; \
+    chmod 600 /opt/unbound/etc/unbound/root.key; \
     rm -rf /usr/share/docs/* /usr/share/man/* /var/log/*
 
 EXPOSE 53/udp
