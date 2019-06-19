@@ -3,7 +3,7 @@ FROM alpine:latest AS build-env
 ENV LIBRESSL_VERSION="2.9.2" \
     LIBRESSL_SHA="b43e73e47c1f14da3c702ab42f29f1d67645a4fa425441337bd6c125b481ef78a40fd13e6b34dadb2af337e1c0c190cfb616186d4db9c9a743a37e594b9b8033"
 
-RUN BUILD_DEPS='build-base curl file linux-headers'; \
+RUN BUILD_DEPS='build-base curl file linux-headers sed'; \
     LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz"; \
     set -ex; \
     apk add --no-cache $BUILD_DEPS; \
@@ -15,12 +15,16 @@ RUN BUILD_DEPS='build-base curl file linux-headers'; \
     tar xzf ../libressl.tar.gz --strip-components=1; \
     rm -f ../libressl.tar.gz; \
     CFLAGS="-DLIBRESSL_APPS=off -DLIBRESSL_TESTS=off"; \
-    ./configure --prefix=/opt/libressl --enable-static=no; \
+    # Fix libressl build with musl libc
+    sed -i "s/#if defined(__ANDROID_API__) && __ANDROID_API__ < 21/#if 1/" ./crypto/compat/getprogname_linux.c; \
+    # Build without static enabled is not working with 2.9
+#    ./configure --prefix=/opt/libressl --enable-static=no; \
+    ./configure --prefix=/opt/libressl; \
     make -j$(getconf _NPROCESSORS_ONLN); \
     make install
 
-ENV UNBOUND_VERSION="1.9.1" \
-    UNBOUND_SHA="5dfac7ce3892f73109fdfe0f81863643b1f4c10cee2d4e2d1a28132f1b9ea4d4f89242e4e6348fdadf998f1c75d53577cbf4f719e98faa1342fc3c5de2e8903d"
+ENV UNBOUND_VERSION="1.9.2" \
+    UNBOUND_SHA="118f0e53ee2d5cfb53ce1f792ca680cc01b5825bf81575e36bd3b24f3bdbe14e6631401bf1bf85eb2ac2a3fa0ee2ee3eb6a28b245d06d48d9975ce4cc260f764"
 
 RUN BUILD_DEPS='build-base curl file linux-headers';  \
     UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz"; \
@@ -56,7 +60,7 @@ RUN set -ex ; \
     rm -fr /opt/libressl/lib/libtls.* /opt/libressl/bin/ocspcheck;  \
     rm -fr /opt/libressl/lib/pkgconfig;  \
     rm -fr /opt/unbound/lib/pkgconfig;  \
-    rm /opt/libressl/lib/*.la;  \
+    rm -fr /opt/libressl/lib/*.la /opt/libressl/lib/*.a;  \
     rm -fr /opt/unbound/share /opt/unbound/include /opt/unbound/lib/*.la; \
     find /opt/libressl/bin -type f | xargs strip --strip-all; \
     find /opt/libressl/lib/lib* -type f | xargs strip --strip-all; \
