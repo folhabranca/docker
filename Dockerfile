@@ -1,4 +1,4 @@
-FROM alpine:latest AS build-env
+FROM alpine:3.9 AS build-env
 
 ENV LIBRESSL_VERSION="2.9.2" \
     LIBRESSL_SHA="b43e73e47c1f14da3c702ab42f29f1d67645a4fa425441337bd6c125b481ef78a40fd13e6b34dadb2af337e1c0c190cfb616186d4db9c9a743a37e594b9b8033"
@@ -73,7 +73,7 @@ RUN set -ex ; \
 
 # ----------------------------------------------------------------------------
 
-FROM alpine:latest
+FROM alpine:3.9
 
 COPY --from=build-env /opt/ /opt/
 
