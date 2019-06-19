@@ -127,3 +127,4 @@ This image was tested with the latest docker-ce software. Be sure to upgrade it 
 
 - Make DNS over TLS more easy to use
 - Try BoringTLS
+- Create a new tag with python modules build
