@@ -21,6 +21,7 @@ USE_CHROOT=${ENABLE_CHROOT:-yes}
 ENABLE_REMOTE_CONTROL=${ENABLE_REMOTE_CONTROL:-no}
 DISABLE_CONF_VARS=${DISABLE_CONF_VARS:-no}
 UPDATE_TRUST_ANCHOR=${UPDATE_TRUST_ANCHOR:-yes}
+INFRA_HOST_TTL=${INFRA_HOST_TTL:-900}
 VERSION=$(/opt/unbound/sbin/unbound -h| tail -5 | head -3)
 
 echo ${VERSION}
@@ -40,6 +41,7 @@ if [ "x${DISABLE_CONF_VARS}" = "xno" ]; then
   sed 's/{{QNAME_MINIMISATION}}/'"${QNAME_MINIMISATION}"'/' -i /opt/unbound/etc/unbound/unbound.conf
   sed 's/{{RRSET_ROUNDROBIN}}/'"${RRSET_ROUNDROBIN}"'/' -i /opt/unbound/etc/unbound/unbound.conf
   sed 's/{{USE_CAPS_FOR_ID}}/'"${USE_CAPS_FOR_ID}"'/' -i /opt/unbound/etc/unbound/unbound.conf
+  sed 's/{{INFRA_HOST_TTL}}/'"${INFRA_HOST_TTL}"'/' -i /opt/unbound/etc/unbound/unbound.conf
   sed 's/{{ENABLE_REMOTE_CONTROL}}/'"${ENABLE_REMOTE_CONTROL}"'/' -i /opt/unbound/etc/unbound/unbound.conf
 
   if [ "x${ENABLE_REMOTE_CONTROL}" = "xyes" ]; then

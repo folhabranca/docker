@@ -50,6 +50,7 @@ These options can be set via the environment variable -e flag:
 - **USE_CHROOT**: Use chroot while running unbound. (Default: "yes", Possible values: "yes,no")
 - **UPDATE_TRUST_ANCHOR**: Enable oder Disable update of the root trust anchor for DNSSEC validation at startup (Default: "yes", Values: "yes, no")
 - **DISABLE_CONF_VARS**: Enable oder Disable update of unbound.conf through environment variable (Default: "no", Values: "yes, no")
+- **INFRA_HOST_TTL**: Time  to live in seconds for entries in the host cache. (Default: 900)
 
 # More config control
 
@@ -92,6 +93,7 @@ services:
       - ENABLE_REMOTE_CONTROL=yes
       - USE_LOGFILE=no
       - USE_CHROOT=yes
+      - INFRA_HOST_TTL=60
     cap_add:
       - net_admin
     restart: always
