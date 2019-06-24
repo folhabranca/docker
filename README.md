@@ -1,7 +1,6 @@
-Unbound (with DNSSEC validation)
-===========
+# Unbound Docker Image
 
-# Main Purpose
+## Main Purpose
 
 - Be slim as possible.
 - Use the latest unbound and libressl versions available.
@@ -12,13 +11,13 @@ so, this means:
 - No python module.
 - No static library from libunbound or libressl.
 
-# Current versions
+## Current versions
 
 - unbound: **1.9.2** (compiled, not package)
 - libressl: **2.9.2** (compiled, not package)
 - Alpine Linux **3.10** based image (latest stable version)
 
-# Running
+## Running
 
 Use this command to start the container. Unbound will listen on port 53 udp and tcp.
 
@@ -29,16 +28,17 @@ If you want to override the nameserver in the unbound container, you can use:
 
 ```docker run --name unbound -d -p 53:53/udp -p 53:53 --dns="127.0.0.1" folhabranca/unbound:latest```
 
-# Configuration
+## Configuration
+
 These options can be set via the environment variable -e flag:
 
-- **INTERFACE**: Sets the interface to listen to. (Default: 0.0.0.0, Values: <IP addr>)
+- **INTERFACE**: Sets the interface to listen to. (Default: 0.0.0.0, Values: [IP addr])
 - **PORT**: Port number that unbound will listen. This has to be the same of the docker run. (Default: 53, Values: <1-65535>)
 - **DO_IPV6**: Enable or disable ipv6. (Default: "yes", Values: "yes, no")
 - **DO_IPV4**: Enable or disable ipv4. (Default: "yes", Values: "yes, no")
 - **DO_UDP**: Enable or disable udp. (Default: "yes", Values: "yes, no")
 - **DO_TCP**: Enable or disable tcp. (Default: "yes", Values: "yes, no")
-- **VERBOSITY**: Verbosity number, 0 is least verbose. (Default: "0", Values: "<integer>")
+- **VERBOSITY**: Verbosity number, 0 is least verbose. (Default: "0", Values: "[integer]")
 - **SO_REUSEPORT**: Use SO_REUSEPORT to distribute queries over threads. (Default: "no", Values: "yes, no")
 - **HIDE_IDENTITY**: Enable to not answer id.server and hostname.bind queries. (Default: "no", Values: "yes, no")
 - **HIDE_VERSION**: Enable to not answer version.server and version.bind queries. (Default: "no", Values: "yes, no")
@@ -52,19 +52,19 @@ These options can be set via the environment variable -e flag:
 - **DISABLE_CONF_VARS**: Enable or disable updates of unbound.conf through environment variable (Default: "no", Values: "yes, no")
 - **INFRA_HOST_TTL**: Time  to live in seconds for entries in the host cache. (Default: 900)
 
-# More config control
+## More config control
 
 If you need to use other control commands, just mount a bind dir to
-`/opt/unbound/etc/unbound/unbound.conf.d` and put a <.conf> file in there with your configuration.
+`/opt/unbound/etc/unbound/unbound.conf.d` and put a *.conf file in there with your configuration.
 
 Note: The default access configuration is in this directory. If you are mounting this directory, you need at
 least to include access configuration, otherwise you will get REFUSED reply.
 
-# Docker compose
+## Docker compose
 
 If using docker-compose, use like this:
 
-```
+```Yaml
 services:
   unbound:
     image: folhabranca/unbound:latest
@@ -100,30 +100,32 @@ services:
 ```
 
 Notes:
- - If USE_LOGFILE is set to yes, the log file will be `/opt/unbound/etc/unbound/log/unbound.log`.
- - `net_admin` capability must be added to the container if you want to change the `so-rcvbuf` or `so-sndbuf` config.
+
+- If USE_LOGFILE is set to yes, the log file will be `/opt/unbound/etc/unbound/log/unbound.log`.
+- `net_admin` capability must be added to the container if you want to change the `so-rcvbuf` or `so-sndbuf` config.
    Currently those can only be changed by mount a volume of `unbound.conf.d` and adding a config file there.
 
-# Unbound-control
+## Unbound-control
 
-`unbound-control` is available if **ENABLE_REMOTE_CONTROL** is set to **yes**. To access it 
+`unbound-control` is available if **ENABLE_REMOTE_CONTROL** is set to **yes**. To access it
 just create a script like this:
 
-```
+```sh
 #!/bin/sh
 
 docker exec unbound_unbound_1  /opt/unbound/sbin/unbound-control $@
 ```
 
 Notes:
+
 - Using the docker composer makes it easier to get the container name to use in the script.
 - **Be sure** to only give **exec** permission the users or group allowed to run the `unbound-control` command, otherwise every one in the host machine can play with your DNS server.
 
-# Known to work
+## Known to work
 
 This image was tested with the latest docker-ce software. Be sure to upgrade it if you are having problem.
 
-# Future work
+## Future work
 
 - Make DNS over TLS more easy to use
 - Try BoringTLS
