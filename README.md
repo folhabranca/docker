@@ -4,7 +4,6 @@
 
 - Be slim as possible.
 - Use the latest unbound and libressl versions available.
-- Intended to be the latest level image (no import from this image)
 
 so, this means:
 
@@ -13,9 +12,9 @@ so, this means:
 
 ## Current versions
 
-- unbound: **1.9.2** (compiled, not package)
-- libressl: **2.9.2** (compiled, not package)
-- Alpine Linux **3.10** based image (latest stable version)
+- [unbound](https://nlnetlabs.nl/projects/unbound/about/): **1.9.2** (compiled, not package)
+- [libressl](http://www.libressl.org/): **2.9.2** (compiled, not package)
+- [Alpine Linux](https://alpinelinux.org/) **3.10** based image (latest stable version)
 
 ## Running
 
@@ -38,7 +37,7 @@ These options can be set via the environment variable -e flag:
 - **DO_IPV4**: Enable or disable ipv4. (Default: "yes", Values: "yes, no")
 - **DO_UDP**: Enable or disable udp. (Default: "yes", Values: "yes, no")
 - **DO_TCP**: Enable or disable tcp. (Default: "yes", Values: "yes, no")
-- **VERBOSITY**: Verbosity number, 0 is least verbose. (Default: "0", Values: "[integer]")
+- **VERBOSITY**: Verbosity number, 0 is least verbose. (Default: "0", Values: "integer")
 - **SO_REUSEPORT**: Use SO_REUSEPORT to distribute queries over threads. (Default: "no", Values: "yes, no")
 - **HIDE_IDENTITY**: Enable to not answer id.server and hostname.bind queries. (Default: "no", Values: "yes, no")
 - **HIDE_VERSION**: Enable to not answer version.server and version.bind queries. (Default: "no", Values: "yes, no")
@@ -125,8 +124,12 @@ Notes:
 
 This image was tested with the latest docker-ce software. Be sure to upgrade it if you are having problem.
 
+## Issues
+
+If you have any issue with this image, please report them at the github source repository.
+
 ## Future work
 
 - Make DNS over TLS more easy to use
-- Try BoringTLS
+- Try BoringSSL
 - Create a new tag with python modules build
