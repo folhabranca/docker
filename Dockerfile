@@ -1,19 +1,24 @@
 FROM alpine:3.10 AS build-env
 
-ENV LIBRESSL_VERSION="2.9.2" \
-    LIBRESSL_SHA="b43e73e47c1f14da3c702ab42f29f1d67645a4fa425441337bd6c125b481ef78a40fd13e6b34dadb2af337e1c0c190cfb616186d4db9c9a743a37e594b9b8033"
+ARG LIBRESSL_VERSION="2.9.2"
 
-RUN BUILD_DEPS='build-base curl file linux-headers sed'; \
-    LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz"; \
+RUN LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz"; \
+    LIBRESSL_KEY="A1EB079B8D3EB92B4EBD3139663AF51BD5E4D8D5"; \
+    BUILD_DEPS='build-base curl file gnupg linux-headers sed'; \
     set -ex; \
     apk add --no-cache $BUILD_DEPS; \
     mkdir -p /tmp/src/libressl; \
     cd /tmp/src; \
-    curl -sSL $LIBRESSL_DOWNLOAD_URL -o libressl.tar.gz; \
-    echo "${LIBRESSL_SHA} *libressl.tar.gz" | sha512sum -c - ; \
+    curl -sSL ${LIBRESSL_DOWNLOAD_URL} -o libressl.tar.gz; \
+    curl -sSL ${LIBRESSL_DOWNLOAD_URL}.asc -o libressl.tar.gz.asc; \
+    export GNUPGHOME="$(mktemp -d)"; \
+    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "${LIBRESSL_KEY}" \
+    || gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "${LIBRESSL_KEY}" \
+    || gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "${LIBRESSL_KEY}"; \
+    gpg --batch --verify libressl.tar.gz.asc libressl.tar.gz; \
     cd libressl; \
     tar xzf ../libressl.tar.gz --strip-components=1; \
-    rm -f ../libressl.tar.gz; \
+    rm -f ../libressl.tar.gz*; \
     CFLAGS="-DLIBRESSL_APPS=off -DLIBRESSL_TESTS=off"; \
     # Fix libressl build with musl libc
     sed -i "s/#if defined(__ANDROID_API__) && __ANDROID_API__ < 21/#if 1/" ./crypto/compat/getprogname_linux.c; \
@@ -23,11 +28,11 @@ RUN BUILD_DEPS='build-base curl file linux-headers sed'; \
     make -j$(getconf _NPROCESSORS_ONLN); \
     make install
 
-ENV UNBOUND_VERSION="1.9.2" \
-    UNBOUND_SHA="118f0e53ee2d5cfb53ce1f792ca680cc01b5825bf81575e36bd3b24f3bdbe14e6631401bf1bf85eb2ac2a3fa0ee2ee3eb6a28b245d06d48d9975ce4cc260f764"
+ARG UNBOUND_VERSION="1.9.2"
 
-RUN BUILD_DEPS='build-base curl file linux-headers';  \
-    UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz"; \
+RUN UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz"; \
+    UNBOUND_KEY="EDFAA3F2CA4E6EB05681AF8E9F6F1C2D7E045F8D"; \
+    BUILD_DEPS='build-base curl file gnupg linux-headers'; \
     set -ex; \
     apk add --no-cache \
       $BUILD_DEPS  \
@@ -38,10 +43,15 @@ RUN BUILD_DEPS='build-base curl file linux-headers';  \
     mkdir -p /tmp/src/unbound; \
     cd /tmp/src; \
     curl -sSL $UNBOUND_DOWNLOAD_URL -o unbound.tar.gz; \
-    echo "${UNBOUND_SHA} *unbound.tar.gz" | sha512sum -c - ; \
+    curl -sSL $UNBOUND_DOWNLOAD_URL.asc -o unbound.tar.gz.asc; \
+    export GNUPGHOME="$(mktemp -d)"; \
+    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "${UNBOUND_KEY}" \
+    || gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "${UNBOUND_KEY}" \
+    || gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "${UNBOUND_KEY}"; \
+    gpg --batch --verify unbound.tar.gz.asc unbound.tar.gz; \
     cd unbound; \
     tar xzf ../unbound.tar.gz --strip-components=1; \
-    rm -f ../unbound.tar.gz; \
+    rm -f ../unbound.tar.gz*; \
     addgroup -S unbound 2>/dev/null; \
     adduser -S -D -H -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null; \
     RANLIB="gcc-ranlib" ./configure --prefix=/opt/unbound --with-pthreads \
