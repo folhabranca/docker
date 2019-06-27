@@ -32,6 +32,7 @@ ARG UNBOUND_VERSION="1.9.2"
 
 RUN UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz"; \
     UNBOUND_KEY="EDFAA3F2CA4E6EB05681AF8E9F6F1C2D7E045F8D"; \
+    INTERNIC_KEY="F0CB1A326BDF3F3EFA3A01FA937BB869E3A238C5"; \
     BUILD_DEPS='build-base curl file gnupg linux-headers'; \
     set -ex; \
     apk add --no-cache \
@@ -60,9 +61,18 @@ RUN UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VE
     make -j$(getconf _NPROCESSORS_ONLN); \
     mkdir -p /opt/unbound/etc/unbound/unbound.conf.d; \
     make install; \
-    curl -s ftp://FTP.INTERNIC.NET/domain/named.cache -o /opt/unbound/etc/unbound/root.hints; \
+    curl -s https://www.internic.net/domain/named.cache -o /opt/unbound/etc/unbound/root.hints; \
+    curl -s https://www.internic.net/domain/named.cache.md5 -o /opt/unbound/etc/unbound/root.hints.md5; \
+    curl -s https://www.internic.net/domain/named.cache.sig -o /opt/unbound/etc/unbound/root.hints.sig; \
+    NAMED_MD5=`cat /opt/unbound/etc/unbound/root.hints.md5`; \
+    echo "${NAMED_MD5} */opt/unbound/etc/unbound/root.hints" | md5sum -c - ; \
+    export GNUPGHOME="$(mktemp -d)"; \
+    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "${INTERNIC_KEY}" \
+    || gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "${INTERNIC_KEY}" \
+    || gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "${INTERNIC_KEY}"; \
+    gpg --verify /opt/unbound/etc/unbound/root.hints.sig /opt/unbound/etc/unbound/root.hints; \
     /opt/unbound/sbin/unbound-anchor -v  -a /opt/unbound/etc/unbound/root.key || true; \
-    rm /opt/unbound/etc/unbound/unbound.conf
+    rm /opt/unbound/etc/unbound/unbound.conf /opt/unbound/etc/unbound/root.hints.md5 /opt/unbound/etc/unbound/root.hints.sig;
 
 RUN set -ex ; \
     rm -fr /opt/libressl/share; \
