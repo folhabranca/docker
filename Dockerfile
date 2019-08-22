@@ -1,6 +1,6 @@
 FROM alpine:3.10 AS build-env
 
-ARG LIBRESSL_VERSION="2.9.2"
+ARG LIBRESSL_VERSION="3.0.0"
 
 RUN LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz"; \
     LIBRESSL_KEY="A1EB079B8D3EB92B4EBD3139663AF51BD5E4D8D5"; \
@@ -20,10 +20,6 @@ RUN LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl
     tar xzf ../libressl.tar.gz --strip-components=1; \
     rm -f ../libressl.tar.gz*; \
     CFLAGS="-DLIBRESSL_APPS=off -DLIBRESSL_TESTS=off"; \
-    # Fix libressl build with musl libc
-    sed -i "s/#if defined(__ANDROID_API__) && __ANDROID_API__ < 21/#if 1/" ./crypto/compat/getprogname_linux.c; \
-    # Build without static enabled is not working with 2.9
-#    ./configure --prefix=/opt/libressl --enable-static=no; \
     ./configure --prefix=/opt/libressl; \
     make -j$(getconf _NPROCESSORS_ONLN); \
     make install

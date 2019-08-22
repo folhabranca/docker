@@ -13,7 +13,7 @@ so, this means:
 ## Current versions
 
 - [unbound](https://nlnetlabs.nl/projects/unbound/about/): **1.9.2** (compiled, not package)
-- [libressl](http://www.libressl.org/): **2.9.2** (compiled, not package)
+- [libressl](http://www.libressl.org/): **3.0.0** (compiled, not package)
 - [Alpine Linux](https://alpinelinux.org/) **3.10** based image (latest stable version)
 
 ## Running
