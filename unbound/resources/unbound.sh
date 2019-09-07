@@ -22,7 +22,7 @@ ENABLE_REMOTE_CONTROL=${ENABLE_REMOTE_CONTROL:-no}
 DISABLE_CONF_VARS=${DISABLE_CONF_VARS:-no}
 UPDATE_TRUST_ANCHOR=${UPDATE_TRUST_ANCHOR:-yes}
 INFRA_HOST_TTL=${INFRA_HOST_TTL:-900}
-VERSION=$(/opt/unbound/sbin/unbound -h| tail -5 | head -3)
+VERSION=$(/opt/unbound/sbin/unbound -V)
 
 echo ${VERSION}
 
