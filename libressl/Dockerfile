@@ -1,10 +1,10 @@
 FROM alpine:3.10 AS build-env
 
-ARG LIBRESSL_VERSION="3.0.0"
+ARG LIBRESSL_VERSION="3.0.2"
 
 RUN LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${LIBRESSL_VERSION}.tar.gz"; \
     LIBRESSL_KEY="A1EB079B8D3EB92B4EBD3139663AF51BD5E4D8D5"; \
-    BUILD_DEPS='build-base curl file gnupg linux-headers sed'; \
+    BUILD_DEPS='build-base curl file gnupg linux-headers'; \
     set -ex; \
     apk add --no-cache $BUILD_DEPS; \
     mkdir -p /tmp/src/libressl; \
@@ -23,10 +23,10 @@ RUN LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl
     ./configure --prefix=/opt/libressl; \
     make -j$(getconf _NPROCESSORS_ONLN); \
     make install; \
-    rm -fr /opt/libressl/share; 
+    rm -rf /usr/local/share/man;
 
 # ----------------------------------------------------------------------------
 
 FROM alpine:3.10
 
-COPY --from=build-env /opt/ /opt/
+COPY --from=build-env /opt /opt
