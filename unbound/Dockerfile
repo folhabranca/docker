@@ -1,6 +1,7 @@
-FROM folhabranca/libressl:latest AS build-env
+#FROM folhabranca/libressl:latest AS build-env
+FROM libevent:latest AS build-env
 
-ARG UNBOUND_VERSION="1.9.3"
+ARG UNBOUND_VERSION="1.9.4"
 
 RUN UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz"; \
     UNBOUND_KEY="EDFAA3F2CA4E6EB05681AF8E9F6F1C2D7E045F8D"; \
@@ -9,8 +10,6 @@ RUN UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VE
     set -ex; \
     apk add --no-cache \
       $BUILD_DEPS  \
-      libevent  \
-      libevent-dev  \
       expat   \
       expat-dev; \
     mkdir -p /tmp/src/unbound; \
@@ -28,7 +27,7 @@ RUN UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VE
     addgroup -S unbound 2>/dev/null; \
     adduser -S -D -H -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null; \
     RANLIB="gcc-ranlib" ./configure --prefix=/opt/unbound --with-pthreads \
-        --with-username=unbound --with-ssl=/opt/libressl --with-libevent \
+        --with-username=unbound --with-ssl=/opt/libressl --with-libevent=/opt/libevent \
         --enable-event-api --enable-static=no --enable-pie  --enable-relro-now;  \
     make -j$(getconf _NPROCESSORS_ONLN); \
     mkdir -p /opt/unbound/etc/unbound/unbound.conf.d; \
@@ -48,20 +47,23 @@ RUN UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VE
 
 RUN set -ex ; \
     rm -fr /opt/libressl/share; \
-    rm -fr /opt/libressl/include/*;  \
+    rm -fr /opt/libressl/include;  \
     rm -fr /opt/libressl/lib/libtls.* /opt/libressl/bin/ocspcheck;  \
     rm -fr /opt/libressl/lib/pkgconfig;  \
     rm -fr /opt/unbound/lib/pkgconfig;  \
-    rm -fr /opt/libressl/lib/*.la /opt/libressl/lib/*.a;  \
+    rm -fr /opt/libressl/lib/*.la /opt/libressl/lib/*.a; \
+    rm -fr /opt/libevent/lib/*.la /opt/libevent/bin /opt/libevent/include; \
+    rm -fr /opt/libevent/lib/pkgconfig; \
     rm -fr /opt/unbound/share /opt/unbound/include /opt/unbound/lib/*.la; \
     find /opt/libressl/bin -type f | xargs strip --strip-all; \
     find /opt/libressl/lib/lib* -type f | xargs strip --strip-all; \
+    find /opt/libevent/lib/lib* -type f | xargs strip --strip-all; \
     find /opt/unbound/lib/lib* -type f | xargs strip --strip-all; \
     strip --strip-all /opt/unbound/sbin/unbound; \
     strip --strip-all /opt/unbound/sbin/unbound-anchor; \
     strip --strip-all /opt/unbound/sbin/unbound-checkconf;  \
     strip --strip-all /opt/unbound/sbin/unbound-control; \
-    strip --strip-all /opt/unbound/sbin/unbound-host
+    strip --strip-all /opt/unbound/sbin/unbound-host;
 
 # ----------------------------------------------------------------------------
 
@@ -74,7 +76,8 @@ COPY resources/unbound.conf /opt/unbound/etc/unbound/
 COPY resources/allow.conf /opt/unbound/etc/unbound/unbound.conf.d/
 
 RUN set -ex; \
-    apk add --no-cache libevent expat; \
+    apk add --no-cache expat; \
+    apk del --no-cache libevent; \
     addgroup -g 59834 -S unbound 2>/dev/null; \
     adduser -S -D -H -u 59834 -h /etc/unbound -s /sbin/nologin -G unbound -g "Unbound user" unbound 2>/dev/null; \
     mkdir -p /var/log/unbound && chown unbound.unbound /var/log/unbound; \
