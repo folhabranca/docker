@@ -1,4 +1,4 @@
-FROM folhabranca/libressl:latest AS build-env
+FROM folhabranca/libevent:latest AS build-env
 
 
 ARG UNBOUND_VERSION="1.9.4"
