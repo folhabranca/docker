@@ -3,7 +3,7 @@ FROM folhabranca/libevent:latest AS build-env
 ARG UNBOUND_VERSION="1.9.6"
 
 RUN UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz"; \
-    UNBOUND_KEY="EDFAA3F2CA4E6EB05681AF8E9F6F1C2D7E045F8D"; \
+    UNBOUND_KEYS="EDFAA3F2CA4E6EB05681AF8E9F6F1C2D7E045F8D 21615A7F2478EA8C27DD26B830918D8275724222"; \
     INTERNIC_KEY="F0CB1A326BDF3F3EFA3A01FA937BB869E3A238C5"; \
     BUILD_DEPS='build-base curl file gnupg linux-headers'; \
     set -ex; \
@@ -16,9 +16,11 @@ RUN UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VE
     curl -sSL ${UNBOUND_DOWNLOAD_URL} -o unbound.tar.gz; \
     curl -sSL ${UNBOUND_DOWNLOAD_URL}.asc -o unbound.tar.gz.asc; \
     export GNUPGHOME="$(mktemp -d)"; \
-    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "${UNBOUND_KEY}" \
-    || gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "${UNBOUND_KEY}" \
-    || gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "${UNBOUND_KEY}"; \
+    for UNBOUND_KEY in ${UNBOUND_KEYS}; do \
+      gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "${UNBOUND_KEY}" \
+      || gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "${UNBOUND_KEY}" \
+      || gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "${UNBOUND_KEY}"; \
+    done; \
     gpg --batch --verify unbound.tar.gz.asc unbound.tar.gz; \
     cd unbound; \
     tar xzf ../unbound.tar.gz --strip-components=1; \
