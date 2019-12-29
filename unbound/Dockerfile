@@ -1,6 +1,6 @@
 FROM folhabranca/libevent:latest AS build-env
 
-ARG UNBOUND_VERSION="1.9.4"
+ARG UNBOUND_VERSION="1.9.6"
 
 RUN UNBOUND_DOWNLOAD_URL="https://www.unbound.net/downloads/unbound-${UNBOUND_VERSION}.tar.gz"; \
     UNBOUND_KEY="EDFAA3F2CA4E6EB05681AF8E9F6F1C2D7E045F8D"; \
