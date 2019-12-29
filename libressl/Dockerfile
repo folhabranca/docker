@@ -1,4 +1,4 @@
-FROM alpine:3.10 AS build-env
+FROM alpine:3.11 AS build-env
 
 ARG LIBRESSL_VERSION="3.0.2"
 
