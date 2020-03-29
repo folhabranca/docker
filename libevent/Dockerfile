@@ -31,7 +31,7 @@ RUN LIBREVENT_DOWNLOAD_URL="https://github.com/libevent/libevent/releases/downlo
 
 # ----------------------------------------------------------------------------
 
-FROM alpine:3.10
+FROM alpine:3.11
 
 COPY --from=build-env /opt /opt
 
