@@ -27,6 +27,6 @@ RUN LIBRESSL_DOWNLOAD_URL="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl
 
 # ----------------------------------------------------------------------------
 
-FROM alpine:3.10
+FROM alpine:3.11
 
 COPY --from=build-env /opt /opt
